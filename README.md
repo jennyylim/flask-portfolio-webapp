@@ -34,3 +34,5 @@ It demonstrates foundational skills in Python, Flask, HTML/CSS, Git version cont
 - **Git & GitHub**
 - **PythonAnywhere (Hosting)**
 
+<img width="1882" height="680" alt="JennyALim_pythonanywhere" src="https://github.com/user-attachments/assets/cdfd1d00-0865-4a8f-9df3-4474a3701a67" />
+
