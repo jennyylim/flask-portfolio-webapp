@@ -3,14 +3,88 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-    <title>My scratchboard page</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+    integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+    crossorigin="anonymous">
+
+    <!-- Google Font: Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .terminal-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        margin-bottom: 40px;   /* extra spacing before comments */
+    }
+
+    /* FIXED TERMINAL — no growth, no scroll */
+    .terminal {
+        background-color: #0d0d0f;
+        color: #f5f1f3;
+        padding: 20px;
+        font-family: "Fira Code", monospace;
+        font-size: 14px;           
+        border-radius: 8px;
+        width: 650px;
+        height: 310px;             
+        overflow: hidden;          
+        white-space: pre-wrap;
+        line-height: 1.35;
+        box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    }
+
+    /* Cursor blink */
+    #terminal-text::after {
+        content: "";
+        border-left: 3px solid #f5f1f3;
+        margin-left: 5px;
+        animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Fade in animation for lines */
+    .fade-line {
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Smaller comment box */
+    textarea.form-control {
+        height: 80px;
+        margin-top: 15px;
+    }
+
+    /* Spacing around Post button */
+    .post-btn {
+        margin-top: 10px;
+        padding: 8px 20px;
+    }
+
+    /* Spacing between comments */
+    .comment-row {
+        margin-bottom: 10px;
+    }
+</style>
+
+<title>My scratchboard page</title>
 </head>
 
+<body>
 
-    <body>
-
-        <nav class="navbar navbar-inverse">
+<!-- NAVBAR -->
+<nav class="navbar navbar-inverse">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -22,30 +96,117 @@
             <a class="navbar-brand" href="#">My scratchpad</a>
         </div>
     </div>
-        </nav>
+</nav>
 
-    <div class="container">
-
-
-        <div class="row">
-            This is the first dummy comment.
-        </div>
-
-        <div class="row">
-            This is the the second dummy comment. It's no more interesting
-            than the first.
-        </div>
-
-        <div class="row">
-            This is the third dummy comment. It's actually quite exciting!
-        </div>
-
-        <div>
-            <form action="." method="POST">
-                <textarea class="form-control" name="contents" placeholder="Enter a comment"></textarea>
-                <input type="submit" class="btn btn-success" value="Post comment">
-            </form>
-        </div>
+<!-- TERMINAL INTRO -->
+<div class="terminal-wrapper">
+    <div class="terminal">
+        <span id="terminal-text"></span>
     </div>
-    </body>
+</div>
+
+<div class="container">
+
+    {% for comment in comments %}
+        <div class="row comment-row">
+            {{ comment }}
+        </div>
+    {% endfor %}
+
+    <div class="row" style="margin-bottom: 40px;">
+        <form action="." method="POST">
+            <textarea class="form-control" name="contents" placeholder="Enter a comment"></textarea>
+            <input type="submit" class="btn btn-success post-btn" value="Post comment">
+        </form>
+    </div>
+
+</div><!-- /.container -->
+
+<script>
+/* ASCII art banner: JENN */
+const banner = [
+"      ██╗███████╗███╗  ██╗███╗  ██╗",
+"      ██║██╔════╝████╗ ██║████╗ ██║",
+"      ██║█████╗  ██╔██╗██║██╔██╗██║",
+" ██   ██║██╔══╝  ██║╚████║██║╚████║",
+" ╚█████╔╝███████╗██║ ╚███║██║ ╚███║",
+"  ╚════╝ ╚══════╝╚═╝  ╚══╝╚═╝  ╚══╝ ",
+"                J  E  N  N  T E R M I N A L"
+];
+
+const lines = [
+    "$ whoami",
+    "Hi I'm Jenny — Cloud Security Support Engineer in training",
+    "> Loading profile...",
+    "> Access granted ✔"
+];
+
+const speed = 80;
+const linePause = 2000;
+const loopDelay = 5000;
+
+let lineIndex = 0;
+let charIndex = 0;
+
+function showBannerInstant() {
+    const terminal = document.getElementById("terminal-text");
+
+    banner.forEach((line, idx) => {
+        const lineSpan = document.createElement("div");
+        lineSpan.classList.add("fade-line");
+        lineSpan.id = "line-" + idx;
+        lineSpan.textContent = line;
+        terminal.appendChild(lineSpan);
+    });
+
+    // blank line after banner
+    const blank = document.createElement("div");
+    blank.id = "line-" + banner.length;
+    terminal.appendChild(blank);
+
+    lineIndex = 0;
+    charIndex = 0;
+    setTimeout(typeAfterBanner, 500);
+}
+
+function typeAfterBanner() {
+    const terminal = document.getElementById("terminal-text");
+    const bannerOffset = banner.length + 1;
+
+    if (lineIndex < lines.length) {
+
+        if (charIndex === 0) {
+            const newLine = document.createElement("div");
+            newLine.classList.add("fade-line");
+            newLine.id = "line-" + (bannerOffset + lineIndex);
+            terminal.appendChild(newLine);
+        }
+
+        const currentLine = lines[lineIndex];
+        const lineElement = document.getElementById("line-" + (bannerOffset + lineIndex));
+
+        if (charIndex < currentLine.length) {
+            lineElement.textContent += currentLine.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeAfterBanner, speed);
+        } else {
+            charIndex = 0;
+            lineIndex++;
+            setTimeout(typeAfterBanner, linePause);
+        }
+
+    } else {
+        setTimeout(resetAll, loopDelay);
+    }
+}
+
+function resetAll() {
+    document.getElementById("terminal-text").innerHTML = "";
+    showBannerInstant();
+}
+
+showBannerInstant();
+</script>
+
+</body>
 </html>
