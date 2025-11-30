@@ -3,7 +3,6 @@
 This project is a personal portfolio website and a simple Flask-based web application hosted on PythonAnywhere.  
 It demonstrates foundational skills in Python, Flask, HTML/CSS, Git version control, and basic database integration.
 
----
 
 ## 🚀 Features
 
@@ -23,7 +22,6 @@ It demonstrates foundational skills in Python, Flask, HTML/CSS, Git version cont
 - Option to delete comment
 - Backend + Frontend integrated into one page  
 
----
 
 ## 🛠 Technologies Used
 - **Python 3**
