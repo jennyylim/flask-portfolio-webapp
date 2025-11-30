@@ -1,211 +1,185 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
-    integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
-    crossorigin="anonymous">
-
-    <!-- Google Font: Fira Code -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>My scratchpad</title>
 
 <style>
+    body {
+        background: #0b0d0f;
+        color: #d6f6ff;
+        font-family: monospace;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* NAVBAR */
+    .navbar {
+        background: #000;
+        padding: 12px 20px;
+        font-size: 20px;
+        color: #9ff7ff;
+        border-bottom: 1px solid #0f3a3c;
+    }
+
+    /* TERMINAL BOX */
     .terminal-wrapper {
         display: flex;
         justify-content: center;
-        margin-top: 40px;
-        margin-bottom: 40px;   /* extra spacing before comments */
+        margin-top: 30px;
     }
 
-    /* FIXED TERMINAL — no growth, no scroll */
     .terminal {
-        background-color: #0d0d0f;
-        color: #f5f1f3;
-        padding: 20px;
-        font-family: "Fira Code", monospace;
-        font-size: 14px;           
-        border-radius: 8px;
-        width: 650px;
-        height: 310px;             
-        overflow: hidden;          
-        white-space: pre-wrap;
-        line-height: 1.35;
-        box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        width: 85%;
+        max-width: 1200px;
+        height: 360px;   /* FIXED HEIGHT */
+        background: #07090b;
+        padding: 30px 30px 5px 30px;
+        border-radius: 12px;
+        border: 1px solid #0f3a3c;
+        box-shadow: 0px 0px 18px #0f3a3c inset, 0px 0px 18px #0f3a3c;
+        overflow: hidden;  /* PREVENT EXPANDING */
+        position: relative;
     }
 
-    /* Cursor blink */
-    #terminal-text::after {
+    /* CRT Scanlines */
+    .terminal::after {
         content: "";
-        border-left: 3px solid #f5f1f3;
-        margin-left: 5px;
-        animation: blink 0.7s infinite;
+        pointer-events: none;
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            to bottom,
+            rgba(0,255,255,0.04) 0px,
+            rgba(0,255,255,0.04) 2px,
+            rgba(0,255,255,0.03) 3px
+        );
+        opacity: 0.25;
     }
 
-    @keyframes blink { 50% { opacity: 0; } }
-
-    /* Fade in animation for lines */
-    .fade-line {
-        opacity: 0;
-        animation: fadeIn 1s forwards;
+    #terminal-output {
+        white-space: pre;
+        font-size: 17px;
+        line-height: 1.25;
+        text-shadow: 0 0 4px #76e8ff;
+        height: 100%;
+        overflow-y: hidden;
+        font-family: "JetBrains Mono", "DejaVu Sans Mono", "Consolas", "Courier New", monospace;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to   { opacity: 1; }
+    .banner-line {
+        color: #9ff7ff;
+        text-shadow: 0 0 12px #77e3ff;
+        font-size: 22px;
+        white-space: pre;
     }
 
-    /* Smaller comment box */
-    textarea.form-control {
-        height: 80px;
-        margin-top: 15px;
+    /* COMMENTS */
+    .comment-box {
+        width: 85%;
+        max-width: 1200px;
+        margin: 25px auto;
     }
 
-    /* Spacing around Post button */
-    .post-btn {
-        margin-top: 10px;
-        padding: 8px 20px;
+    textarea {
+        width: 100%;
+        height: 70px;
+        background: #0f1113;
+        border: 1px solid #355b5c;
+        color: #cfeeee;
+        padding: 10px;
+        font-family: monospace;
+        margin-bottom: 20px;
     }
 
-    /* Spacing between comments */
-    .comment-row {
-        margin-bottom: 10px;
+    .btn {
+        background: #3bbf5b;
+        border: none;
+        padding: 10px 20px;
+        color: black;
+        cursor: pointer;
+        border-radius: 4px;
+        font-weight: bold;
     }
 </style>
-
-<title>My scratchboard page</title>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-inverse">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">My scratchpad</a>
-        </div>
-    </div>
-</nav>
+<div class="navbar">My scratchpad</div>
 
-<!-- TERMINAL INTRO -->
+<!-- TERMINAL -->
 <div class="terminal-wrapper">
     <div class="terminal">
-        <span id="terminal-text"></span>
+        <span id="terminal-output"></span>
     </div>
 </div>
 
-<div class="container">
-
+<!-- COMMENTS -->
+<div class="comment-box">
     {% for comment in comments %}
-        <div class="row comment-row">
-            {{ comment }}
-        </div>
+      <div style="margin-bottom:6px;">{{ comment.content }}</div>
     {% endfor %}
 
-    <div class="row" style="margin-bottom: 40px;">
-        <form action="." method="POST">
-            <textarea class="form-control" name="contents" placeholder="Enter a comment"></textarea>
-            <input type="submit" class="btn btn-success post-btn" value="Post comment">
-        </form>
-    </div>
-
-</div><!-- /.container -->
+    <form action="/" method="POST">
+        <textarea name="contents" placeholder="Enter a comment"></textarea>
+        <br>
+        <input type="submit" class="btn" value="Post comment">
+    </form>
+</div>
 
 <script>
-/* ASCII art banner: JENN */
+const term = document.getElementById("terminal-output");
+
+
 const banner = [
-"      ██╗███████╗███╗  ██╗███╗  ██╗",
-"      ██║██╔════╝████╗ ██║████╗ ██║",
-"      ██║█████╗  ██╔██╗██║██╔██╗██║",
-" ██   ██║██╔══╝  ██║╚████║██║╚████║",
-" ╚█████╔╝███████╗██║ ╚███║██║ ╚███║",
-"  ╚════╝ ╚══════╝╚═╝  ╚══╝╚═╝  ╚══╝ ",
-"                J  E  N  N  T E R M I N A L"
+"       ██╗███████╗███╗  ██╗███╗  ██╗",
+"       ██║██╔════╝████╗ ██║████╗ ██║",
+"       ██║█████╗  ██╔██╗██║██╔██╗██║",
+"  ██   ██║██╔══╝  ██║╚████║██║╚████║",
+"  ╚█████╔╝███████╗██║ ╚███║██║ ╚███║",
+"   ╚════╝ ╚══════╝╚═╝  ╚══╝╚═╝  ╚══╝",
+"",
+"         J E N N Y   T E R M I N A L"
 ];
 
 const lines = [
-    "$ whoami",
-    "Hi I'm Jenny — Cloud Security Support Engineer in training",
-    "> Loading profile...",
-    "> Access granted ✔"
+"$ whoami",
+"Hi I'm Jenny — Cloud Security Support Engineer in training",
+"> Loading profile…",
+"> Access granted ✓"
 ];
 
-const speed = 80;
-const linePause = 2000;
-const loopDelay = 5000;
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
-let lineIndex = 0;
-let charIndex = 0;
-
-function showBannerInstant() {
-    const terminal = document.getElementById("terminal-text");
-
-    banner.forEach((line, idx) => {
-        const lineSpan = document.createElement("div");
-        lineSpan.classList.add("fade-line");
-        lineSpan.id = "line-" + idx;
-        lineSpan.textContent = line;
-        terminal.appendChild(lineSpan);
-    });
-
-    // blank line after banner
-    const blank = document.createElement("div");
-    blank.id = "line-" + banner.length;
-    terminal.appendChild(blank);
-
-    lineIndex = 0;
-    charIndex = 0;
-    setTimeout(typeAfterBanner, 500);
+async function type(text){
+    for (let c of text){
+        term.innerHTML += c;
+        await sleep(12);
+    }
+    term.innerHTML += "\n";
 }
 
-function typeAfterBanner() {
-    const terminal = document.getElementById("terminal-text");
-    const bannerOffset = banner.length + 1;
+async function run(){
+    term.innerHTML = "";
 
-    if (lineIndex < lines.length) {
+    banner.forEach(line => {
+        term.innerHTML += `<span class="banner-line">${line}</span>\n`;
+    });
 
-        if (charIndex === 0) {
-            const newLine = document.createElement("div");
-            newLine.classList.add("fade-line");
-            newLine.id = "line-" + (bannerOffset + lineIndex);
-            terminal.appendChild(newLine);
-        }
+    await sleep(150);
 
-        const currentLine = lines[lineIndex];
-        const lineElement = document.getElementById("line-" + (bannerOffset + lineIndex));
-
-        if (charIndex < currentLine.length) {
-            lineElement.textContent += currentLine.charAt(charIndex);
-            charIndex++;
-            setTimeout(typeAfterBanner, speed);
-        } else {
-            charIndex = 0;
-            lineIndex++;
-            setTimeout(typeAfterBanner, linePause);
-        }
-
-    } else {
-        setTimeout(resetAll, loopDelay);
+    // Type terminal lines
+    for (let l of lines){
+        await type(l);
+        await sleep(120);
     }
 }
 
-function resetAll() {
-    document.getElementById("terminal-text").innerHTML = "";
-    showBannerInstant();
-}
-
-showBannerInstant();
+run();
+setInterval(run, 7000);
 </script>
 
 </body>
